@@ -431,11 +431,11 @@ function stuff_menu_Callback(hObject, eventdata, handles)
     set(handles.findCellsControls, 'Enable', 'off', 'Visible', 'off');
     if(isfield(handles, 'imgBlue') && isfield(handles, 'imgGreen'))
         handles.imgBlueGreen = handles.imgBlue & handles.imgGreen;
-        black = cat(3, zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)));
+        %black = cat(3, zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)));
     end
     if(isfield(handles, 'imgBlue') && isfield(handles, 'imgRed'))
         handles.imgBlueRed = handles.imgBlue & handles.imgRed;
-        black = cat(3, zeros(size(handles.imgRed)), zeros(size(handles.imgRed)), zeros(size(handles.imgRed)));
+        %black = cat(3, zeros(size(handles.imgRed)), zeros(size(handles.imgRed)), zeros(size(handles.imgRed)));
     end
     if(isfield(handles, 'imgGreen') && isfield(handles, 'imgRed'))
         handles.imgGreenRed = handles.imgGreen & handles.imgRed;
@@ -449,7 +449,10 @@ function stuff_menu_Callback(hObject, eventdata, handles)
     clc;
     
     fprintf('Blocks are counted left to right, top to bottom.\nEx.\nBlock 1\nBlock 2\nBlock 3\n...\n');
-
+    
+    background = size(handles.img);
+    background(end) = [];
+    black = cat(3, zeros(background), zeros(background), zeros(background));
     imshow(black);
     guidata(hObject, handles);
 end
@@ -1517,7 +1520,6 @@ function blue_green_red_button_Callback(hObject, eventdata, handles)
             handles.blueGreenRedLayer = imshow(BGR);
             set(handles.blueGreenRedLayer, 'AlphaData', handles.imgBlueGreenRed);
             hold off
-            clc;
             disp('Blue/Green/Red (White) Cells');
             [stats, block] = getCount(handles, handles.imgBlueGreenRed);
             set(handles.blueGreenRed_edit, 'String', numel(stats));
