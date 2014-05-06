@@ -22,7 +22,7 @@ function varargout = cellFinder(varargin)
 
 % Edit the above text to modify the response to help cellFinder
 
-% Last Modified by GUIDE v2.5 16-Apr-2014 14:59:03
+% Last Modified by GUIDE v2.5 04-May-2014 21:15:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,10 +62,8 @@ set(handles.click_menu, 'Checked', 'on');
 set(handles.findCells_menu, 'Checked', 'on');
 set(handles.panel1, 'Visible', 'on');
 set(handles.panel2, 'Visible', 'off');
-
-
-% UIWAIT makes cellFinder wait for user response (see UIRESUME)
-% uiwait(handles.cellFinder);
+set(handles.blueAll_check, 'Value', 1);
+set(handles.greenAll_check, 'Value', 1);
 set(handles.axes1, 'XTickLabel', []);
 set(handles.axes1, 'XTick', []);
 set(handles.axes1, 'YTickLabel', []);
@@ -1249,13 +1247,27 @@ function blue_button_Callback(hObject, eventdata, handles)
         end
         toggle = get(handles.blue_button, 'Value');
         if (toggle == get(handles.blue_button, 'Max'))
-            blue = cat(3, zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)), ones(size(handles.imgBlue)));
-            hold on
-            handles.blueLayer = imshow(blue);
-            set(handles.blueLayer, 'AlphaData', handles.imgBlue);
-            hold off
+            if (get(handles.blueAll_check, 'Value') == 1)
+                blue = cat(3, zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)), ones(size(handles.imgBlue)));
+                hold on
+                handles.blueLayer = imshow(blue);
+                set(handles.blueLayer, 'AlphaData', handles.imgBlue);
+                hold off
+                image = handles.imgBlue;
+            elseif (get(handles.blueOnly_check, 'Value') == 1)
+                blue = cat(3, zeros(size(handles.imgBlue)), zeros(size(handles.imgBlue)), ones(size(handles.imgBlue)));
+                if (isfield(handles, 'imgBlueGreen'))
+                    image = handles.imgBlue;
+                    imageSubtract = imreconstruct(handles.imgBlueGreen, image);
+                    image = ~(image == imageSubtract);
+                    hold on
+                    handles.blueLayer = imshow(blue);
+                    set(handles.blueLayer, 'AlphaData', image);
+                    hold off
+                end
+            end
             disp('Blue Cells');
-            [stats, block] = getCount(handles, handles.imgBlue);
+            [stats, block] = getCount(handles, image);
             set(handles.blue_edit, 'String', numel(stats));
             handles.blueStats = stats;
             handles.blueQuads = block;
@@ -1294,13 +1306,27 @@ function green_button_Callback(hObject, eventdata, handles)
         end
         toggle = get(handles.green_button, 'Value');
         if (toggle == get(handles.green_button, 'Max'))
-            green = cat(3, zeros(size(handles.imgGreen)), ones(size(handles.imgGreen)), zeros(size(handles.imgGreen)));
-            hold on
-            handles.greenLayer = imshow(green);
-            set(handles.greenLayer, 'AlphaData', handles.imgGreen);
-            hold off
+            if (get(handles.greenAll_check, 'Value') == 1)
+                green = cat(3, zeros(size(handles.imgGreen)), ones(size(handles.imgGreen)), zeros(size(handles.imgGreen)));
+                hold on
+                handles.greenLayer = imshow(green);
+                set(handles.greenLayer, 'AlphaData', handles.imgGreen);
+                hold off
+                image = handles.imgGreen;
+            elseif (get(handles.greenOnly_check, 'Value') == 1)
+                green = cat(3, zeros(size(handles.imgGreen)), ones(size(handles.imgGreen)), zeros(size(handles.imgGreen)));
+                if (isfield(handles, 'imgBlueGreen'))
+                    image = handles.imgGreen;
+                    imageSubtract = imreconstruct(handles.imgBlueGreen, image);
+                    image = ~(image == imageSubtract);
+                    hold on
+                    handles.greenLayer = imshow(green);
+                    set(handles.greenLayer, 'AlphaData', image);
+                    hold off
+                end
+            end
             disp('Green Cells');
-            [stats, block] = getCount(handles, handles.imgGreen);
+            [stats, block] = getCount(handles, image);
             set(handles.green_edit, 'String', numel(stats));
             handles.greenStats = stats;
             handles.greenQuads = block;
@@ -1965,4 +1991,35 @@ function doubleLabel_slider_CreateFcn(hObject, eventdata, handles)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
+end
+
+
+% --- Executes on button press in blueOnly_check.
+function blueOnly_check_Callback(hObject, eventdata, handles)
+    set(handles.blueAll_check, 'Value', 0);
+end
+
+% --- Executes on button press in blueAll_check.
+function blueAll_check_Callback(hObject, eventdata, handles)
+    set(handles.blueOnly_check, 'Value', 0);
+end
+
+% --- Executes on button press in greenOnly_check.
+function greenOnly_check_Callback(hObject, eventdata, handles)
+    set(handles.greenAll_check, 'Value', 0);
+end
+
+% --- Executes on button press in greenAll_check.
+function greenAll_check_Callback(hObject, eventdata, handles)
+    set(handles.greenOnly_check, 'Value', 0);
+end
+
+% --- Executes on button press in redOnly_check.
+function redOnly_check_Callback(hObject, eventdata, handles)
+    set(handles.redAll_check, 'Value', 0);
+end
+
+% --- Executes on button press in redAll_check.
+function redAll_check_Callback(hObject, eventdata, handles)
+    set(handles.redOnly_check, 'Value', 0);
 end
