@@ -22,7 +22,7 @@ function varargout = plotData(varargin)
 
 % Edit the above text to modify the response to help plotData
 
-% Last Modified by GUIDE v2.5 17-Apr-2014 10:17:28
+% Last Modified by GUIDE v2.5 05-May-2014 21:40:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -124,10 +124,18 @@ function plot_button_Callback(hObject, eventdata, handles)
         dataH = removerows(dataH, find(dataH(:,3) == 2));
     end
     
+    if (get(handles.gOnly_check, 'Value') == 0)
+        dataH = removerows(dataH, find(dataH(:,3) == 200));
+    end
+    
     if (get(handles.b_check, 'Value') == 0)
         dataH = removerows(dataH, find(dataH(:,3) == 3));
     end
    
+    if (get(handles.bOnly_check, 'Value') == 0)
+        dataH = removerows(dataH, find(dataH(:,3) == 300));
+    end
+    
     if (get(handles.rg_check, 'Value') == 0)
         dataH = removerows(dataH, find(dataH(:,3) == 12));
     end
@@ -168,7 +176,13 @@ function plot_button_Callback(hObject, eventdata, handles)
             case 2
                 c = [0 1 0];        % Green Cells
                 
+            case 200
+                c = [0 1 0];        % Green Cells
+                
             case 3
+                c = [0 0 1];        % Blue Cells
+                
+            case 300
                 c = [0 0 1];        % Blue Cells
                 
             case 12
@@ -295,6 +309,13 @@ function g_check_Callback(hObject, eventdata, handles)
 function b_check_Callback(hObject, eventdata, handles)
 
 
+% --- Executes on button press in gOnly_check.
+function gOnly_check_Callback(hObject, eventdata, handles)
+
+
+% --- Executes on button press in bOnly_check.
+function bOnly_check_Callback(hObject, eventdata, handles)
+
 % --- Executes on button press in rg_check.
 function rg_check_Callback(hObject, eventdata, handles)
 
@@ -352,3 +373,4 @@ function ymax_edit_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
+

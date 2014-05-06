@@ -198,7 +198,7 @@ function centroidsSave_menu_Callback(hObject, eventdata, handles)
             xGreen(i) = centroid(1) - xo;
             yGreen(i) = centroid(2) - yo;
         end
-        cGreen(:) = 200;
+        cGreen(:) = 2;
         data = vertcat(data, [xGreen, yGreen, cGreen]);
     end
         
@@ -212,19 +212,6 @@ function centroidsSave_menu_Callback(hObject, eventdata, handles)
             yBlue(i) = centroid(2) - yo;
         end
         cBlue(:) = 3;
-        data = vertcat(data, [xBlue, yBlue, cBlue]);
-    end
-    
-    if (isfield(handles, 'blueOnlyStats'))
-        xBlue = zeros(numel(handles.blueOnlyStats), 1);
-        yBlue = zeros(numel(handles.blueOnlyStats), 1);
-        cBlue = zeros(numel(handles.blueOnlyStats), 1);
-        for i = 1:numel(handles.blueOnlyStats)
-            centroid = handles.blueOnlyStats(i).Centroid;
-            xBlue(i) = centroid(1) - xo;
-            yBlue(i) = centroid(2) - yo;
-        end
-        cBlue(:) = 300;
         data = vertcat(data, [xBlue, yBlue, cBlue]);
     end
     
